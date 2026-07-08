@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Car Game</title>
+<style>
+body {margin:0; background:#222; overflow:hidden; font-family:Arial;}
+#road {width:300px; height:100vh; background:#444; margin:0 auto; position:relative; border-left:4px dashed #fff; border-right:4px dashed #fff;}
+#car {width:40px; height:80px; background:#e00; position:absolute; bottom:20px; left:130px; border-radius:8px;}
+.enemy {width:40px; height:80px; background:#00e; position:absolute; border-radius:8px;}
+#line {position:absolute; width:10px; height:100%; left:145px; background:repeating-linear-gradient(#fff 0 20px, transparent 20px 40px);}
+#score {position:absolute; top:10px; left:10px; color:#fff; font-size:20px;}
+</style>
+</head>
+<body>
+<div id="road">
+  <div id="line"></div>
+  <div id="car"></div>
+  <div id="score">Score: 0</div>
+</div>
+<script>
+let car = document.getElementById('car');
+let road = document.getElementById('road');
+let scoreEl = document.getElementById('score');
+let pos = 130;
+let score = 0;
+let speed = 5;
+document.addEventListener('keydown', e=>{
+  if(e.key === 'ArrowLeft' && pos > 10) pos -= 20;
+  if(e.key === 'ArrowRight' && pos < 250) pos += 20;
+  car.style.left = pos + 'px';
+});
+function createEnemy(){
+  let enemy = document.createElement('div');
+  enemy.className = 'enemy';
+  enemy.style.left = Math.floor(Math.random()*3)*100 + 10 + 'px';
+  enemy.style.top = '-100px';
+  road.appendChild(enemy);
+  let fall = setInterval(()=>{
+    let top = parseInt(enemy.style.top);
+    if(top > 700){
+      enemy.remove();
+      clearInterval(fall);
+      score++;
+      scoreEl.innerText = 'Score: ' + score;
+    } else {
+      enemy.style.top = top + speed + 'px';
+      if(top > 600 && Math.abs(pos - parseInt(enemy.style.left)) < 40){
+        alert('Game Over! Score: ' + score);
+        window.location.reload();
+      }
+    }
+  },20);
+}
+setInterval(createEnemy, 1200);
+setInterval(()=>{ if(speed < 12) speed += 0.2 }, 5000);
+</script>
+</body>
+  </html>

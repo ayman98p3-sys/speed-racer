@@ -1,2 +1,0 @@
-# speed-racer
-car-game
