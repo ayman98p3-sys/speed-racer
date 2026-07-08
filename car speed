@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Speed Racer</title>
+<style>
+  body { margin: 0; background: #222; overflow: hidden; font-family: Arial; }
+  #game { position: relative; width: 100vw; height: 100vh; background: #333; }
+  #road { position: absolute; width: 300px; height: 100%; left: 50%; transform: translateX(-50%); background: #444; border-left: 4px dashed #fff; border-right: 4px dashed #fff; }
+  .line { position: absolute; width: 4px; height: 50px; background: #fff; left: 50%; transform: translateX(-50%); }
+  #player { position: absolute; width: 40px; height: 70px; background: blue; border-radius: 8px; bottom: 100px; left: 50%; transform: translateX(-50%); }
+  .enemy { position: absolute; width: 40px; height: 70px; background: red; border-radius: 8px; top: -100px; }
+  #score { position: absolute; top: 20px; left: 20px; color: white; font-size: 24px; }
+  #controls { position: absolute; bottom: 30px; width: 100%; display: flex; justify-content: space-between; padding: 0 20px; box-sizing: border-box; }
+  .btn { width: 80px; height: 80px; background: rgba(0,0,255,0.5); border: 3px solid blue; border-radius: 50%; color: white; font-size: 40px; display: flex; align-items: center; justify-content: center; }
+  .btn:active { background: rgba(0,0,255,0.8); }
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="score">النتيجة: 0</div>
+  <div id="road">
+    <div class="line" style="top:0px"></div>
+    <div class="line" style="top:100px"></div>
+    <div class="line" style="top:200px"></div>
+    <div class="line" style="top:300px"></div>
+    <div class="line" style="top:400px"></div>
+    <div class="line" style="top:500px"></div>
+    <div class="line" style="top:600px"></div>
+  </div>
+  <div id="player"></div>
+  <div id="controls">
+    <div class="btn" id="left">←</div>
+    <div class="btn" id="right">→</div>
+  </div>
+</div>
+<script>
+let player = document.getElementById('player');
+let score = 0;
+let posX = 150;
+let gameWidth = 300;
+let speed = 3;
+
+document.getElementById('left').ontouchstart = () => posX -= 50;
+document.getElementById('right').ontouchstart = () => posX += 50;
+
+document.onkeydown = (e) => {
+  if(e.key == 'ArrowLeft') posX -= 50;
+  if(e.key == 'ArrowRight') posX += 50;
+}
+
+function gameLoop() {
+  if(posX < 0) posX = 0;
+  if(posX > gameWidth - 40) posX = gameWidth - 40;
+  player.style.left = (window.innerWidth/2 - 150 + posX) + 'px';
+  
+  document.querySelectorAll('.line').forEach(line => {
+    line.style.top = (parseInt(line.style.top) + speed) + 'px';
+    if(parseInt(line.style.top) > window.innerHeight) line.style.top = '-50px';
+  });
+  
+  score++;
+  document.getElementById('score').innerText = 'النتيجة: ' + score;
+  requestAnimationFrame(gameLoop);
+}
+gameLoop();
+</script>
+</body>
+</html>
